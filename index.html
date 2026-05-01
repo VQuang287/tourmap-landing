@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tải TourMap APK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        h1 { font-size: 28px; color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 25px; font-size: 14px; }
+        .feature-list {
+            text-align: left;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .feature-list li {
+            list-style: none;
+            padding: 8px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .version-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+        .file-size {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+        .expiry-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            background: #d4edda;
+            color: #155724;
+        }
+        .loading {
+            display: none;
+            margin-top: 15px;
+        }
+        .loading.active { display: block; }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .error-message.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-icon">🗺️</div>
+        <h1>TourMap</h1>
+        <p class="subtitle">Ứng dụng hướng dẫn âm thanh đa ngôn ngữ<br>cho các điểm du lịch</p>
+        
+        <!-- Badge hiển thị thời hạn - sẽ được cập nhật bởi JavaScript -->
+        <div class="expiry-badge" id="expiryBadge">
+            ⏱️ Đang kiểm tra...
+        </div>
+        
+        <ul class="feature-list">
+            <li>Hướng dẫn tự động bằng GPS</li>
+            <li>Âm thanh đa ngôn ngữ (VI, EN, ZH, KO, JA, FR)</li>
+            <li>Làm việc offline sau khi tải dữ liệu</li>
+            <li>Quét QR để khám phá điểm đến</li>
+        </ul>
+
+        <button class="btn btn-primary" onclick="downloadApk()" id="downloadBtn">
+            📱 Tải APK (Android)
+        </button>
+        
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Đang tải file...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <strong>⏰ Mã QR đã hết hạn!</strong><br>
+            Vui lòng liên hệ quản trị viên để được cấp mã QR mới.
+        </div>
+
+        <div class="version-info">
+            <p>Phiên bản: 1.0.0 | Yêu cầu: Android 7.0+</p>
+            <span class="file-size" id="fileSize">~45 MB</span>
+        </div>
+        
+        <p style="margin-top: 20px; font-size: 11px; color: #999;">
+            Sau khi tải, mở file APK để cài đặt.<br>
+            Có thể cần bật "Unknown Sources" trong Settings.
+        </p>
+    </div>
+
+    <script>
+        // Cấu hình - THAY ĐỔI CÁC GIÁ TRỊ NÀY
+        const CONFIG = {
+            // URL đến file APK trong GitHub Releases
+            APK_URL: 'https://github.com/vquang287/tourmap-landing/releases/latest/download/tourmap.apk',
+            
+            // Ngày hết hạn (ISO format) - Để trống nếu không có thời hạn
+            EXPIRES_AT: '', // Ví dụ: '2026-05-31T23:59:59Z'
+            
+            // Thời gian hiển thị đếm ngược (tính bằng giờ), 0 = vô hạn
+            EXPIRY_HOURS: 0
+        };
+
+        // Kiểm tra thời hạn
+        function checkExpiry() {
+            const badge = document.getElementById('expiryBadge');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Nếu có EXPIRES_AT cụ thể
+            if (CONFIG.EXPIRES_AT) {
+                const expiryDate = new Date(CONFIG.EXPIRES_AT);
+                const now = new Date();
+                
+                if (now > expiryDate) {
+                    // Đã hết hạn
+                    badge.textContent = '❌ Đã hết hạn';
+                    badge.style.background = '#f8d7da';
+                    badge.style.color = '#721c24';
+                    downloadBtn.disabled = true;
+                    downloadBtn.style.opacity = '0.5';
+                    errorMessage.classList.add('active');
+                    return false;
+                } else {
+                    // Còn hiệu lực - hiển thị thời gian còn lại
+                    const hoursLeft = Math.floor((expiryDate - now) / (1000 * 60 * 60));
+                    const minutesLeft = Math.floor(((expiryDate - now) % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    if (hoursLeft > 24) {
+                        const days = Math.floor(hoursLeft / 24);
+                        badge.textContent = `⏱️ Còn hiệu lực: ${days} ngày`;
+                    } else if (hoursLeft > 0) {
+                        badge.textContent = `⏱️ Còn hiệu lực: ${hoursLeft}h ${minutesLeft}m`;
+                    } else {
+                        badge.textContent = `⏱️ Còn hiệu lực: ${minutesLeft} phút`;
+                    }
+                    return true;
+                }
+            }
+            
+            // Nếu có EXPIRY_HOURS (tính từ lần đầu truy cập)
+            if (CONFIG.EXPIRY_HOURS > 0) {
+                const firstVisit = localStorage.getItem('firstVisit');
+                
+                if (!firstVisit) {
+                    // Lần đầu truy cập - lưu thời điểm
+                    localStorage.setItem('firstVisit', new Date().toISOString());
+                    badge.textContent = `⏱️ Còn hiệu lực: ${CONFIG.EXPIRY_HOURS} giờ`;
+                    return true;
+                } else {
+                    const firstVisitDate = new Date(firstVisit);
+                    const expiryDate = new Date(firstVisitDate.getTime() + CONFIG.EXPIRY_HOURS * 60 * 60 * 1000);
+                    const now = new Date();
+                    
+                    if (now > expiryDate) {
+                        badge.textContent = '❌ Đã hết hạn';
+                        badge.style.background = '#f8d7da';
+                        badge.style.color = '#721c24';
+                        downloadBtn.disabled = true;
+                        downloadBtn.style.opacity = '0.5';
+                        errorMessage.classList.add('active');
+                        return false;
+                    } else {
+                        const hoursLeft = Math.floor((expiryDate - now) / (1000 * 60 * 60));
+                        const minutesLeft = Math.floor(((expiryDate - now) % (1000 * 60 * 60)) / (1000 * 60));
+                        badge.textContent = `⏱️ Còn hiệu lực: ${hoursLeft}h ${minutesLeft}m`;
+                        return true;
+                    }
+                }
+            }
+            
+            // Không có thời hạn
+            badge.textContent = '✅ Luôn có hiệu lực';
+            return true;
+        }
+
+        function downloadApk() {
+            // Kiểm tra thời hạn trước khi tải
+            if (!checkExpiry()) {
+                return;
+            }
+            
+            const btn = document.getElementById('downloadBtn');
+            const loading = document.getElementById('loadingIndicator');
+            
+            btn.disabled = true;
+            loading.classList.add('active');
+            
+            // Bắt đầu tải
+            window.location.href = CONFIG.APK_URL;
+            
+            // Reset UI sau 3 giây
+            setTimeout(() => {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }, 3000);
+        }
+
+        // Kiểm tra khi trang load
+        checkExpiry();
+        
+        // Cập nhật đếm ngược mỗi phút
+        if (CONFIG.EXPIRES_AT || CONFIG.EXPIRY_HOURS > 0) {
+            setInterval(checkExpiry, 60000);
+        }
+    </script>
+</body>
+</html>
