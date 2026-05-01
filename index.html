@@ -178,10 +178,12 @@
         const CONFIG = {
             // URL đến file APK - Dùng CORS proxy để bypass CORS
             // CÁCH 1: AllOrigins CORS proxy (miễn phí, không cần token)
-            APK_URL: 'https://nectar-fade-repose.ngrok-free.app/api/v1/download/apk',
+            // Kiểm tra domain: có thể là .app hoặc .dev tùy ngrok
+            APK_URL: 'https://nectar-fade-repose.ngrok-free.dev/api/v1/download/apk',
             
-            // CÁCH 2: Dùng ngrok tunnel (nếu có)
+            // CÁCH 2: Dùng ngrok tunnel (domain có thể là .app hoặc .dev)
             // APK_URL: 'https://your-ngrok-url.ngrok-free.app/api/v1/download/apk',
+            // APK_URL: 'https://your-ngrok-url.ngrok-free.dev/api/v1/download/apk',
             
             // CÁCH 3: GitHub Releases (cần upload trước)
             // APK_URL: 'https://github.com/vquang287/tourmap-landing/releases/download/v1.0.0/tourmap.apk',
