@@ -271,8 +271,14 @@
             btn.disabled = true;
             loading.classList.add('active');
             
-            // Bắt đầu tải
-            window.location.href = CONFIG.APK_URL;
+            // Tạo link tải với tên file đúng
+            const link = document.createElement('a');
+            link.href = CONFIG.APK_URL;
+            link.download = 'tourmap.apk'; // Force tên file .apk
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             
             // Reset UI sau 3 giây
             setTimeout(() => {
