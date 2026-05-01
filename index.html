@@ -176,8 +176,15 @@
     <script>
         // Cấu hình - THAY ĐỔI CÁC GIÁ TRỊ NÀY
         const CONFIG = {
-            // URL đến file APK (Git LFS raw URL)
-            APK_URL: 'https://github.com/vquang287/tourmap-landing/raw/main/tourmap.apk',
+            // URL đến file APK - Dùng CORS proxy để bypass CORS
+            // CÁCH 1: AllOrigins CORS proxy (miễn phí, không cần token)
+            APK_URL: 'https://api.allorigins.win/raw?url=https://github.com/vquang287/tourmap-landing/raw/main/tourmap.apk',
+            
+            // CÁCH 2: Dùng ngrok tunnel (nếu có)
+            // APK_URL: 'https://your-ngrok-url.ngrok-free.app/api/v1/download/apk',
+            
+            // CÁCH 3: GitHub Releases (cần upload trước)
+            // APK_URL: 'https://github.com/vquang287/tourmap-landing/releases/download/v1.0.0/tourmap.apk',
             
             // Ngày hết hạn (ISO format) - Để trống nếu không có thời hạn
             EXPIRES_AT: '', // Ví dụ: '2026-05-31T23:59:59Z'
