@@ -266,7 +266,7 @@
             return true;
         }
 
-        async function downloadApk() {
+        function downloadApk() {
             // Kiểm tra thời hạn trước khi tải
             if (!checkExpiry()) {
                 return;
@@ -277,38 +277,13 @@
             
             btn.disabled = true;
             loading.classList.add('active');
-            loading.querySelector('p').textContent = 'Đang tải file (~45MB)...';
+            loading.querySelector('p').textContent = 'Đang mở trang tải...';
             
-            try {
-                // Fetch file và tạo blob URL
-                const response = await fetch(CONFIG.APK_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                
-                // Tạo link tải với tên file đúng
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'tourmap.apk';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Cleanup blob URL
-                window.URL.revokeObjectURL(url);
-                
-            } catch (error) {
-                console.error('Download failed:', error);
-                alert('Tải file thất bại. Vui lòng thử lại sau.');
-                
-                // Fallback: mở link trực tiếp
-                window.open(CONFIG.APK_URL, '_blank');
-            }
+            // Chuyển hướng đến URL tải file
+            // Cách này đơn giản, không bị CORS, và browser sẽ tự xử lý download
+            window.location.href = CONFIG.APK_URL;
             
-            // Reset UI
+            // Reset UI sau 3 giây
             setTimeout(() => {
                 btn.disabled = false;
                 loading.classList.remove('active');
